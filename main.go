@@ -5,6 +5,7 @@ import (
 	"Todo-GO/handlers"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -34,5 +35,10 @@ func main() {
 	http.HandleFunc("/update-todo", handlers.UpdateTodoHandler)
 
 	log.Println("✅ Server is running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default to 8080 for local development
+	}
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

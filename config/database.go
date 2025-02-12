@@ -11,7 +11,8 @@ import (
 var DB *mongo.Collection
 
 func ConnectDB() {
-	clinetOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	clinetOptions := options.Client().ApplyURI("mongodb+srv://tokdirrahoman4:01833740078Trh@todo-go.qksdh.mongodb.net/?retryWrites=true&w=majority&appName=Todo-GO").SetServerAPIOptions(serverAPI)
 	client, err := mongo.Connect(context.TODO(), clinetOptions)
 	if err != nil {
 		log.Fatal("❌ MongoDB Connection Failed:", err)
