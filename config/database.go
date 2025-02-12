@@ -20,19 +20,16 @@ func ConnectDB() {
 		log.Fatal("❌ MongoDB Connection Failed:", err)
 	}
 
-	// Ensure disconnection when the app shuts down
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
 			log.Println("⚠️ MongoDB Disconnect Failed:", err)
 		}
 	}()
 
-	// Ping to check connection
 	if err := client.Ping(context.TODO(), nil); err != nil {
 		log.Fatal("❌ MongoDB Ping Failed:", err)
 	}
 
-	// Set database & collection
 	DB = client.Database("Todo-GO").Collection("todos")
 	fmt.Println("✅ Connected to MongoDB!")
 }
