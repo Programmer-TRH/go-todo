@@ -2,7 +2,6 @@ package config
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,16 +19,10 @@ func ConnectDB() {
 		log.Fatal("❌ MongoDB Connection Failed:", err)
 	}
 
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			log.Println("⚠️ MongoDB Disconnect Failed:", err)
-		}
-	}()
-
 	if err := client.Ping(context.TODO(), nil); err != nil {
 		log.Fatal("❌ MongoDB Ping Failed:", err)
 	}
 
 	DB = client.Database("Todo-GO").Collection("todos")
-	fmt.Println("✅ Connected to MongoDB!")
+	log.Println("✅ Connected to MongoDB!")
 }
