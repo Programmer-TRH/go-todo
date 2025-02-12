@@ -1,0 +1,36 @@
+{{define "edit-form"}}
+    <form id="edit-todo-form" hx-put="/update-todo?id={{.ID.Hex}}" hx-target="#todo-list" hx-on::after-request="document.getElementById('edit-form').innerHTML = ''" 
+    x-data="{
+        initialTitle: '',
+        initialDescription: '',
+        title: '',
+        description: '',
+        isValid() { 
+            return /^[A-Za-z0-9 ]+$/.test(this.title) && 
+                   this.description.trim() !== '' &&
+                   (this.title.trim() !== this.initialTitle.trim() || 
+                    this.description.trim() !== this.initialDescription.trim());
+        } 
+    }" 
+    x-init="
+        initialTitle = $el.dataset.title;
+        initialDescription = $el.dataset.description;
+        title = initialTitle;
+        description = initialDescription;
+    "
+    data-title="{{.Title}}"
+    data-description="{{.Description}}"
+    >
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" x-model="title" required />
+        <p x-show="title && !/^[A-Za-z0-9 ]+$/.test(title)" class="text-red-500">
+            ❌ Title can only contain letters, numbers, and spaces.
+        </p>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" x-model="description" required></textarea>
+
+        <button type="submit" x-bind:disabled="!isValid()"  x-bind:class="{'opacity-50 cursor-not-allowed': !isValid()}">Save</button>
+        <button @click="document.getElementById('edit-form').innerHTML = ''">Cancel</button>
+    </form>
+{{end}}

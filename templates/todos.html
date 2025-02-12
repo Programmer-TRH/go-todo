@@ -1,0 +1,32 @@
+{{define "todos"}}
+<div id="todo-list">
+    {{range .}} 
+        <div class="todo-item" data-id="{{.ID.Hex}}">
+            <h3 {{if .Completed}} style="text-decoration: line-through;" {{end}} >{{.Title}}</h3>
+            <p>{{.Description}}</p>
+
+            {{if not .Completed}}
+            <button hx-post="/complete-todo" 
+                    hx-vals='{"id": "{{.ID.Hex}}"}' 
+                    hx-target="#todo-list">
+                ✅ Mark Completed
+            </button>
+            {{end}}
+
+            <button hx-delete="/delete-todo" 
+                    hx-vals='{"id": "{{.ID.Hex}}"}' 
+                    hx-target="#todo-list">
+                ❌ Delete
+            </button>
+
+            <button hx-get="/edit-todo?id={{.ID.Hex}}" 
+                    hx-target="#edit-form">
+                ✏️ Edit
+            </button>
+        </div>
+    {{else}}
+        <p>No todos found.</p>
+    {{end}}
+</div>
+{{end}}
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg"/>
+    <title>Todo App With GO</title>
+
+    <!-- <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.14.8/dist/cdn.min.js"></script> -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<h1>My To-Do List</h1>
+
+<div x-data="{ 
+    title: '', 
+    description: '', 
+    isValid() { 
+        return /^[A-Za-z0-9 ]+$/.test(this.title) && this.description.trim() !== ''; 
+    } 
+}">
+    <form
+        hx-post="/add"
+        hx-target="#todo-list"
+        hx-swap="outerHTML"
+        hx-on::after-request="setTimeout(() => this.reset(), 100); htmx.trigger('#todo-container', 'reload-todos')"
+    >
+        <label for="title">Title</label>
+        <input type="text" x-model="title" name="title" placeholder="Title" required />
+        <p x-show="title && !/^[A-Za-z0-9 ]+$/.test(title)" class="text-red-500">
+            ❌ Title can only contain letters, numbers, and spaces.
+        </p>
+
+        <label for="description">Description</label>
+        <input type="text" x-model="description" name="description" placeholder="Description" required />
+
+        <button type="submit" id="add-btn" x-bind:disabled="!isValid()" x-bind:class="{'opacity-50 cursor-not-allowed': !isValid()}">
+            + Add To-Do
+        </button>
+    </form>
+</div>
+
+<div
+    id="todo-container"
+    hx-get="/todos"
+    hx-trigger="load, reload-todos"
+    hx-target="#todo-list"
+    hx-swap="innerHTML"
+>
+    <div id="edit-form"></div>
+    <div id="todo-list">
+        <p>No todos found.</p>
+    </div>
+</div>
+   <script src="/static/js/alpine.min.js"></script>
+   <script src="/static/js/htmx.min.js"></script>
+</body>
+</html>
